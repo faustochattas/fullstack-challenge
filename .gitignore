@@ -1,12 +1,22 @@
 # env
 backend/.env
+frontend/.env
 
-# local data
-db/
+# local-only
 cookies.txt
+
+# keep db/init.sql tracked; ignore local db artifacts only (if any)
+db/*.mdf
+db/*.ldf
+db/data/
+db/log/
 
 # dependencies
 backend/node_modules/
+frontend/node_modules/
+
+# build
+frontend/dist/
 
 # OS
 .DS_Store
