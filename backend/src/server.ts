@@ -12,7 +12,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors({
-  origin: "http://localhost:5173",
+  origin: process.env.CORS_ORIGIN || "http://localhost:5173",
   credentials: true,
 }));
 
@@ -42,6 +42,17 @@ app.get("/db-ping", async (_req, res) => {
 /* Routes */
 app.use("/auth", authRoutes);
 app.use("/tasks", tasksRoutes);
+
+// Global error handler
+app.use((err: any, _req: any, res: any, _next: any) => {
+  const status = Number(err?.status) || 500;
+  const message = err?.message || "Internal Server Error";
+  const code = err?.code;
+  if (status >= 500) {
+    console.error(err);
+  }
+  return res.status(status).json({ error: message, ...(code ? { code } : {}) });
+});
 
 /* Start */
 const PORT = Number(process.env.PORT) || 4000;
